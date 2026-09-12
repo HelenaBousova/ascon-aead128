@@ -1,0 +1,19 @@
+# Code::Blocks build output
+bin/
+obj/
+
+# Code::Blocks user-specific/generated files
+*.layout
+*.depend
+
+# Compiled files
+*.exe
+*.o
+*.obj
+*.dll
+*.so
+*.out
+
+# OS junk
+.DS_Store
+Thumbs.db
