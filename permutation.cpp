@@ -2,9 +2,11 @@
 #include "permutation.hpp"
 
 #include <cstdint>
+#include <array>
 
 using ascon::State;
 using ascon::Word;
+using std::array;
 
 namespace ascon
 {
@@ -67,6 +69,7 @@ namespace ascon
     };
 
     void diffusion(State& s)
+    // diffusion layer function
     {
         Word x0 = s.s0;
         Word x1 = s.s1;
@@ -101,14 +104,37 @@ namespace ascon
 
     };
 
-    /*
-    void permutation(State& s, int number_of_rounds)
+    const array<Word, 12> round_constant = {
+        0xf0,
+        0xe1,
+        0xd2,
+        0xc3,
+        0xb4,
+        0xa5,
+        0x96,
+        0x87,
+        0x78,
+        0x69,
+        0x5a,
+        0x4b
+    };
+
+    void permutation_12(State& s)
+    // permutation with 12 rounds
     {
-        for(int i = 0; i < number_of_rounds; i++)
+        for(int i = 0; i < 12; i++)
         {
-            round(s, ????);
+            round(s, round_constant[i]);
         }
     };
-    */
+
+    void permutation_8(State& s)
+    // permutation with 8 rounds
+    {
+        for(int i = 4; i < 12; i++)
+        {
+            round(s, round_constant[i]);
+        }
+    };
 
 };

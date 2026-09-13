@@ -1,11 +1,19 @@
 #pragma once
 
 #include <cstdint>
+#include <array>
+#include <vector>
 
 
 namespace ascon
 {
+    using Byte = std::uint8_t;
     using Word = std::uint64_t;
+    using Key = std::array<Word, 2>;
+    using Nonce = std::array<Word, 2>;
+    using Block = std::array<Word, 2>;
+    using AssociatedData = std::vector<Byte>;
+    using Plaintext = std::vector<Byte>;
 
     struct State {
         Word s0;
