@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <array>
 #include <vector>
+#include <optional>
 
 using ascon::State;
 using ascon::Word;
@@ -12,6 +13,8 @@ using ascon::Nonce;
 using std::array;
 using std::vector;
 using std::size_t;
+using std::optional;
+using std::nullopt;
 
 namespace ascon
 {
@@ -146,8 +149,9 @@ namespace ascon
         // 2. parse plaintext to 128-bit blocks
         vector<Block> p_blocks = to_blocks(p_padded);
 
-        Ciphertext c;
         // 3. proscess blocks EXCEPT the last one
+        Ciphertext c;
+
         for (size_t i = 0; i + 1 < p_blocks.size(); i++)
         {
             const Block& block = p_blocks[i];
@@ -156,7 +160,7 @@ namespace ascon
             s.s0 ^= block[0];
             s.s1 ^= block[1];
 
-            // 3.2. generate ciphertext
+            // 3.2. append ciphertext
             append_word(c, s.s0);
             append_word(c, s.s1);
 
@@ -184,6 +188,71 @@ namespace ascon
         }
 
         return c;
+    };
+
+    Plaintext ciphertext_processing(State& s, const Ciphertext& c)
+    {
+        // 1. padd ciphertext
+        vector<Byte> c_padded = padd_plaintext(c);
+
+        // 2. parse ciphertext to 128-bit blocks
+        vector<Block> c_blocks = to_blocks(c_padded);
+
+        // 3. process blocks EXCEPT the last one
+        Plaintext p;
+
+        for (size_t i = 0; i + 1 < c_blocks.size(); i++)
+        {
+            const Block& block = c_blocks[i];
+
+            // 3.1. recover plaintext (XOR first 128 bits of state with ciphertext block)
+            Word p0 = s.s0 ^ block[0];
+            Word p1 = s.s1 ^ block[1];
+
+            // 3.2. append plaintext
+            append_word(p, p0);
+            append_word(p, p1);
+
+            // 3.3. reconstruct state from ciphertext
+            s.s0 = block[0];
+            s.s1 = block[1];
+
+            // 3.4. p[8] after each full block
+            permutation_8(s);
+        };
+
+        // 4. process final block
+        size_t remaining_c = c.size() % rate_in_bytes;
+
+        // convert state to bytes
+        vector<Byte> state_bytes;
+
+        append_word(state_bytes, s.s0);
+        append_word(state_bytes, s.s1);
+
+        // beginning of the final partial ciphertext block
+        size_t final_block_start = c.size() - remaining_c;
+
+        // 4.1. recover remaining plaintext bytes
+        for (size_t i = 0; i < remaining_c; i++)
+        {
+            Byte plaintext_byte = state_bytes[i] ^ c[final_block_start + i];
+            p.push_back(plaintext_byte);
+
+            // 4.2. reconstruct state using ciphertext
+            state_bytes[i] = c[final_block_start + i];
+        }
+
+        // 4.3. reconstruct padding absorbed during encryption
+        state_bytes[remaining_c] ^= 0x01;
+
+        // 4.4. convert state bytes back to words
+        vector<Block> state_blocks = to_blocks(state_bytes);
+
+        s.s0 = state_blocks[0][0];
+        s.s1 = state_blocks[0][1];
+
+        return p;
     };
 
     Tag finalization(State& s, const Key& k)
@@ -222,5 +291,26 @@ namespace ascon
         // 5. output ciphertext and tag
         EncryptionResult result = EncryptionResult{c, t};
         return result;
+    };
+
+    optional<Plaintext> decryption(const Key& k, const Nonce& n, const AssociatedData& ad, const Ciphertext& c, const Tag& t1)
+    {
+        // 1. initialization
+        State s = initialization(k, n);
+
+        // 2. associated data processing
+        associated_data_processing(s, ad);
+
+        // 3. ciphertext processing
+        Plaintext p = ciphertext_processing(s, c);
+
+        // 4. finalization + tag generation
+        Tag t2 = finalization(s, k);
+
+        // 5. tag check and output return
+        if (t1 == t2)
+            return p;
+        else
+            return nullopt;
     };
 };

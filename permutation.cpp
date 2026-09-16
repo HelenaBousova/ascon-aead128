@@ -136,5 +136,4 @@ namespace ascon
             round(s, round_constant[i]);
         }
     };
-
 };

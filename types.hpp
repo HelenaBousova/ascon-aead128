@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <array>
 #include <vector>
-
+#include <string>
 
 namespace ascon
 {

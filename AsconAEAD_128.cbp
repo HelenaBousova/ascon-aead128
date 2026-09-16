@@ -35,12 +35,12 @@
 		</Compiler>
 		<Unit filename="KATs.txt" />
 		<Unit filename="aead.cpp" />
+		<Unit filename="functions.hpp" />
 		<Unit filename="permutation.cpp" />
-		<Unit filename="permutation.hpp" />
 		<Unit filename="test_diffusion.cpp">
 			<Option virtualFolder="Tests/" />
 		</Unit>
-		<Unit filename="test_encryption.cpp">
+		<Unit filename="test_encryption_decryption.cpp">
 			<Option virtualFolder="Tests/" />
 		</Unit>
 		<Unit filename="test_permutation.cpp">
