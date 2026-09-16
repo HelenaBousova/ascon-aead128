@@ -33,14 +33,19 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="permutation.cpp">
-			<Option virtualFolder="Tests/" />
-		</Unit>
+		<Unit filename="KATs.txt" />
+		<Unit filename="aead.cpp" />
+		<Unit filename="permutation.cpp" />
 		<Unit filename="permutation.hpp" />
 		<Unit filename="test_diffusion.cpp">
 			<Option virtualFolder="Tests/" />
 		</Unit>
-		<Unit filename="test_permutation.cpp" />
+		<Unit filename="test_encryption.cpp">
+			<Option virtualFolder="Tests/" />
+		</Unit>
+		<Unit filename="test_permutation.cpp">
+			<Option virtualFolder="Tests/" />
+		</Unit>
 		<Unit filename="test_round.cpp">
 			<Option virtualFolder="Tests/" />
 		</Unit>

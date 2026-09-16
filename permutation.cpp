@@ -1,5 +1,5 @@
 #include "types.hpp"
-#include "permutation.hpp"
+#include "functions.hpp"
 
 #include <cstdint>
 #include <array>

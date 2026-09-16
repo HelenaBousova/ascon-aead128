@@ -1,5 +1,5 @@
 #include "types.hpp"
-#include "permutation.hpp"
+#include "functions.hpp"
 
 #include <cstdint>
 #include <array>
@@ -11,13 +11,14 @@ using ascon::Key;
 using ascon::Nonce;
 using std::array;
 using std::vector;
+using std::size_t;
 
 namespace ascon
 {
     // initialization vector
     constexpr Word iv = 0x00001000808c0001;
 
-    State initialization(Key k, Nonce n)
+    State initialization(const Key& k, const Nonce& n)
     // initialization of Ascon-AEAD128
     {
         // 1. initialize state as iv || k || n
@@ -61,7 +62,7 @@ namespace ascon
     {
         vector<Block> blocks;
 
-        for (std::size_t i = 0; i < padded.size(); i += rate_in_bytes)
+        for (size_t i = 0; i < padded.size(); i += rate_in_bytes)
         {
             Block block{0, 0};
 
@@ -83,7 +84,8 @@ namespace ascon
         return blocks;
     };
 
-    void associated_data_processing(State& s, AssociatedData ad)
+    void associated_data_processing(State& s, const AssociatedData& ad)
+    // associated data processing function
     {
         if (ad.size() > 0)
         {
@@ -105,18 +107,120 @@ namespace ascon
         };
 
         // 5. XOR a 1 to the end of state
-        Word one = Word{0x01};
-        s.s4 ^= one;
+        s.s4 ^= (Word{1} << 63);
     };
 
-    void plaintext_processing(State& s, Plaintext p)
+    vector<Byte> padd_plaintext(const Plaintext& p)
     {
+        vector<Byte> padded = p;
 
+        // padd plaintext with a 1
+        padded.push_back(0x01);
+
+        // padd plaintext with 0s so that we have full 128-bit blocks
+        while (padded.size() % rate_in_bytes != 0)
+        {
+            padded.push_back(0x00);
+        }
+
+        return padded;
     };
 
-    void finalization(State& s, Key k)
+    void append_word(vector<Byte>& output, Word w)
+    // splits word to bytes and appends them to output (from function argument)
     {
-
+        for (int i = 0; i < 8; i++)
+        {
+            output.push_back(
+                static_cast<Byte>((w >> (8 * i)) & 0xff)
+            );
+        };
     };
 
+    Ciphertext plaintext_processing(State& s, const Plaintext& p)
+    // plaintext processing function
+    {
+        // 1. padd plaintext
+        vector<Byte> p_padded = padd_plaintext(p);
+
+        // 2. parse plaintext to 128-bit blocks
+        vector<Block> p_blocks = to_blocks(p_padded);
+
+        Ciphertext c;
+        // 3. proscess blocks EXCEPT the last one
+        for (size_t i = 0; i + 1 < p_blocks.size(); i++)
+        {
+            const Block& block = p_blocks[i];
+
+            // 3.1. absorb plaintext (XOR block to first 128 bits of state)
+            s.s0 ^= block[0];
+            s.s1 ^= block[1];
+
+            // 3.2. generate ciphertext
+            append_word(c, s.s0);
+            append_word(c, s.s1);
+
+            // 3.3. p[8] after each block
+            permutation_8(s);
+        };
+
+        // 4. process final block
+        const Block& last_block = p_blocks.back();
+
+        // 4.1. absorb plaintext (XOR)
+        s.s0 ^= last_block[0];
+        s.s1 ^= last_block[1];
+
+        // 4.2. generate ciphertext from the rest of plaintext, but NOT from padding
+        size_t remaining_p = p.size() % 16;
+
+        vector<Byte> c_last;
+        append_word(c_last, s.s0);
+        append_word(c_last, s.s1);
+
+        for (size_t i = 0; i < remaining_p; i++)
+        {
+            c.push_back(c_last[i]);
+        }
+
+        return c;
+    };
+
+    Tag finalization(State& s, const Key& k)
+    // finalization and tag generation
+    {
+        // 1. absorb key to state (XOR to 2nd and 3rd word of state)
+        s.s2 ^= k[0];
+        s.s3 ^= k[1];
+
+        // 2. permute state by p[12]
+        permutation_12(s);
+
+        // 3. generate tag (XOR key to the last two words of state)
+        Tag t;
+
+        t[0] = s.s3 ^ k[0];
+        t[1] = s.s4 ^ k[1];
+
+        return t;
+    };
+
+    EncryptionResult encryption(const Key& k, const Nonce& n, const AssociatedData& ad, const Plaintext& p)
+    {
+        // 1. initialization
+        State s = initialization(k, n);
+
+        // 2. associated data processing
+        associated_data_processing(s, ad);
+
+        // 3. plaintext processing
+        Ciphertext c = plaintext_processing(s, p);
+
+        // 4. finalization + tag generation
+        Tag t = finalization(s, k);
+
+        // 5. output ciphertext and tag
+        EncryptionResult result = EncryptionResult{c, t};
+        return result;
+    };
 };

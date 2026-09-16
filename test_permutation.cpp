@@ -1,5 +1,5 @@
 #include "types.hpp"
-#include "permutation.hpp"
+#include "functions.hpp"
 
 #include <array>
 #include <cstdint>
@@ -193,6 +193,7 @@ void run_permutation_8_test()
     };
 };
 
+/*
 int main()
 {
     run_permutation_12_test();
@@ -200,4 +201,4 @@ int main()
 
     return 0;
 };
-
+*/

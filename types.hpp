@@ -14,8 +14,11 @@ namespace ascon
     using Block = std::array<Word, 2>;
     using AssociatedData = std::vector<Byte>;
     using Plaintext = std::vector<Byte>;
+    using Ciphertext = std::vector<Byte>;
+    using Tag = std::array<Word, 2>;
 
-    struct State {
+    struct State
+    {
         Word s0;
         Word s1;
         Word s2;
@@ -31,5 +34,22 @@ namespace ascon
                    s3 == to_compare.s3 &&
                    s4 == to_compare.s4;
         };
+    };
+
+    struct EncryptionResult
+    {
+        Ciphertext c;
+        Tag t;
+    };
+
+    struct KAT
+    {
+        int count;
+
+        std::string key;
+        std::string nonce;
+        std::string plaintext;
+        std::string associated_data;
+        std::string ciphertext_and_tag;
     };
 };
