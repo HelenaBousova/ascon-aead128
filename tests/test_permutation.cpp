@@ -132,6 +132,8 @@ array<State, number_of_test_vectors> permutation_8_expected_output = {
 void run_permutation_12_test()
 // p[12] test function
 {
+    cout << "Permutation p[12] test running..." << endl;
+
     int all_correct = 1;
 
     for(int test_int = 0; test_int < number_of_test_vectors; test_int++)
@@ -155,15 +157,17 @@ void run_permutation_12_test()
     // decide if the test was successful
     if (all_correct == 1)
     {
-        cout << "Test of p[12] implementation was successful." << endl;
+        cout << "Test of p[12] implementation was successful." << endl << endl;
     } else {
-        cout << "p[12] test failed." << endl;
+        cout << "p[12] test failed." << endl << endl;
     };
 };
 
 void run_permutation_8_test()
 // p[8] test function
 {
+    cout << "Permutation p[8] test running..." << endl;
+
     int all_correct = 1;
 
     for(int test_int = 0; test_int < number_of_test_vectors; test_int++)
@@ -187,18 +191,9 @@ void run_permutation_8_test()
     // decide if the test was successful
     if (all_correct == 1)
     {
-        cout << "Test of p[8] implementation was successful." << endl;
+        cout << "Test of p[8] implementation was successful." << endl << endl;
     } else {
-        cout << "p[8] test failed." << endl;
+        cout << "p[8] test failed." << endl << endl;
     };
 };
 
-/*
-int main()
-{
-    run_permutation_12_test();
-    run_permutation_8_test();
-
-    return 0;
-};
-*/

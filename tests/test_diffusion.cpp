@@ -72,6 +72,8 @@ array<State, number_of_test_vectors> diffusion_expected_output = {
 void run_diffusion_test()
 // diffusion test function
 {
+    cout << "Diffusion test running..." << endl;
+
     int all_correct = 1;
 
     for(int test_int = 0; test_int < number_of_test_vectors; test_int++)
@@ -95,17 +97,9 @@ void run_diffusion_test()
     // decide if the test was successful
     if (all_correct == 1)
     {
-        cout << "Test successful, diffusion implementation is correct." << endl;
+        cout << "Test successful, diffusion implementation is correct." << endl << endl;
     } else {
-        cout << "Diffusion test failed." << endl;
+        cout << "Diffusion test failed." << endl << endl;
     };
 };
 
-/*
-int main()
-{
-    run_diffusion_test();
-
-    return 0;
-};
-*/

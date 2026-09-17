@@ -158,6 +158,8 @@ vector<KAT> load_kats(const string& filename)
 
 void run_encryption_test()
 {
+    cout << "Encryption test running..." << endl;
+
     // load KATs file
     vector<KAT> kats = load_kats("KATs.txt");
 
@@ -230,11 +232,13 @@ void run_encryption_test()
     cout << "Total:  " << kats.size() << endl;
 
     if (failed == 0)
-        cout << "Test of encryption was successful.\n" << endl;
+        cout << "Test of encryption was successful." << endl << endl;
 };
 
 void run_decryption_test()
 {
+    cout << "Decryption test running..." << endl;
+
     // load KATs file
     vector<KAT> kats = load_kats("KATs.txt");
 
@@ -302,15 +306,6 @@ void run_decryption_test()
     cout << "Total:  " << kats.size() << endl;
 
     if (failed == 0)
-        cout << "Test of decryption was successful.\n" << endl;
+        cout << "Test of decryption was successful." << endl << endl;
 };
 
-/*
-int main()
-{
-    run_encryption_test();
-    run_decryption_test();
-
-    return 0;
-};
-*/

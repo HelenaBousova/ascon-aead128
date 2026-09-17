@@ -101,6 +101,8 @@ array<State, number_of_test_vectors> round_expected_output = {
 void run_round_test()
 // round test function
 {
+    cout << "Round test running..." << endl;
+
     int all_correct = 1;
 
     for(int test_int = 0; test_int < number_of_test_vectors; test_int++)
@@ -124,18 +126,10 @@ void run_round_test()
     // decide if the test was successful
     if (all_correct == 1)
     {
-        cout << "Test successful, round implementation is correct." << endl;
+        cout << "Test successful, round implementation is correct." << endl << endl;
     } else {
-        cout << "Round test failed." << endl;
+        cout << "Round test failed." << endl << endl;
     };
 };
 
-/*
-int main()
-{
-    run_round_test();
-
-    return 0;
-}
-*/
 

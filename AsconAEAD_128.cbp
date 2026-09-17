@@ -5,7 +5,7 @@
 		<Option title="AsconAEAD_128" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="Tests/" />
+		<Option virtualFolders="Tests/;Headers/" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/Debug/AsconAEAD_128" prefix_auto="1" extension_auto="1" />
@@ -14,6 +14,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add directory="/home/helca/Documents/Ascon-AEAD_128/headers/" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -28,31 +29,83 @@
 					<Add option="-s" />
 				</Linker>
 			</Target>
+			<Target title="Demo">
+				<Option output="AsconAEAD_128" prefix_auto="1" extension_auto="1" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
+			</Target>
+			<Target title="Tests">
+				<Option output="AsconAEAD_128" prefix_auto="1" extension_auto="1" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
+			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
+			<Add directory="/home/helca/Documents/Ascon-AEAD_128/headers/" />
 		</Compiler>
-		<Unit filename="KATs.txt" />
-		<Unit filename="aead.cpp" />
-		<Unit filename="functions.hpp" />
-		<Unit filename="permutation.cpp" />
-		<Unit filename="test_diffusion.cpp">
-			<Option virtualFolder="Tests/" />
+		<Unit filename="KATs.txt">
+			<Option target="Debug" />
+			<Option target="Release" />
 		</Unit>
-		<Unit filename="test_encryption_decryption.cpp">
-			<Option virtualFolder="Tests/" />
+		<Unit filename="headers/functions.hpp">
+			<Option target="Debug" />
+			<Option target="Release" />
 		</Unit>
-		<Unit filename="test_permutation.cpp">
-			<Option virtualFolder="Tests/" />
+		<Unit filename="headers/tests.hpp">
+			<Option target="Debug" />
+			<Option target="Release" />
 		</Unit>
-		<Unit filename="test_round.cpp">
-			<Option virtualFolder="Tests/" />
+		<Unit filename="headers/types.hpp">
+			<Option target="Debug" />
+			<Option target="Release" />
 		</Unit>
-		<Unit filename="test_sbox.cpp">
-			<Option virtualFolder="Tests/" />
+		<Unit filename="main.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+			<Option target="Demo" />
 		</Unit>
-		<Unit filename="types.hpp" />
+		<Unit filename="sources/aead.cpp" />
+		<Unit filename="sources/permutation.cpp" />
+		<Unit filename="tests/test_diffusion.cpp">
+			<Option virtualFolder="Tests/" />
+			<Option target="Debug" />
+			<Option target="Release" />
+			<Option target="Tests" />
+		</Unit>
+		<Unit filename="tests/test_encryption_decryption.cpp">
+			<Option virtualFolder="Tests/" />
+			<Option target="Debug" />
+			<Option target="Release" />
+			<Option target="Tests" />
+		</Unit>
+		<Unit filename="tests/test_main.cpp">
+			<Option virtualFolder="Tests/" />
+			<Option target="Debug" />
+			<Option target="Release" />
+			<Option target="Tests" />
+		</Unit>
+		<Unit filename="tests/test_permutation.cpp">
+			<Option virtualFolder="Tests/" />
+			<Option target="Debug" />
+			<Option target="Release" />
+			<Option target="Tests" />
+		</Unit>
+		<Unit filename="tests/test_round.cpp">
+			<Option virtualFolder="Tests/" />
+			<Option target="Debug" />
+			<Option target="Release" />
+			<Option target="Tests" />
+		</Unit>
+		<Unit filename="tests/test_sbox.cpp">
+			<Option virtualFolder="Tests/" />
+			<Option target="Debug" />
+			<Option target="Release" />
+			<Option target="Tests" />
+		</Unit>
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

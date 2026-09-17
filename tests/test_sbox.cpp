@@ -61,6 +61,8 @@ bool same_sbox_bits(const State& a, const State& b)
 void run_sbox_test()
 // S-box test function.
 {
+    cout << "S-box test running..." << endl;
+
     int all_correct = 1;
 
     for(int test_int = 0; test_int < 32; test_int++)
@@ -84,17 +86,8 @@ void run_sbox_test()
     // decide if the test was successful
     if (all_correct == 1)
     {
-        cout << "Test successful, S-box implementation is correct." << endl;
+        cout << "Test successful, S-box implementation is correct." << endl << endl;
     } else {
-        cout << "S-box test failed." << endl;
+        cout << "S-box test failed." << endl << endl;
     };
 };
-
-/*
-int main()
-{
-    run_sbox_test();
-
-    return 0;
-};
-*/
