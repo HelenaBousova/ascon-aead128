@@ -158,11 +158,12 @@ int main()
     if (decrypted.has_value())
     {
         // convert recovered plaintext bytes back to text
-        string decrypted_message(decrypted->begin(), decrypted->end());
+        Plaintext decrypted_plaintext = decrypted.value();
+        string decrypted_message(decrypted_plaintext.begin(), decrypted_plaintext.end());
 
         cout << "Authentication successful!" << endl;
         cout << "Your decrypted message is: " << decrypted_message << endl;
-    };
+    }
     else
     {
         cout << "Authentication failed!" << endl;
